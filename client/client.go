@@ -6,20 +6,31 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 )
 
 func main() {
-	conn, err := net.Dial("tcp", ":1337")
+	conn, err := net.Dial("tcp", "localhost:1337")
 	if err != nil {
 		log.Fatal("Failed to connect to server:", err)
 	}
 	defer conn.Close()
 
+	// Register a username
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter username: ")
+	username, _ := reader.ReadString('\n')
+	username = strings.TrimSpace(username)
+
+	// Send the username to the server
+	_, err = conn.Write([]byte(username + "\n"))
+	if err != nil {
+		log.Fatal("Failed to send username to server:", err)
+	}
+
 	go receiveMessages(conn)
 
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter text: ")
-
+	fmt.Println("You are registered as:", username)
 	for {
 		input, err := reader.ReadString('\n')
 		if err != nil {
@@ -44,6 +55,6 @@ func receiveMessages(conn net.Conn) {
 			break
 		}
 
-		fmt.Println(message)
+		fmt.Print(message)
 	}
 }
