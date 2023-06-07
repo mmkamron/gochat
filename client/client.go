@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -10,7 +11,10 @@ import (
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "localhost:1337")
+	host := flag.String("host", "kamron.dev", "host domain or IP address")
+	port := flag.String("port", "1337", "port number")
+	flag.Parse()
+	conn, err := net.Dial("tcp", net.JoinHostPort(*host, *port))
 	if err != nil {
 		log.Fatal("Failed to connect to server:", err)
 	}

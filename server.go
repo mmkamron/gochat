@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"os"
 	"strings"
 )
 
@@ -15,7 +16,7 @@ var (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", ":1337")
+	listener, err := net.Listen("tcp", ":"+os.Getenv("PORT"))
 	if err != nil {
 		log.Fatal("Failed to start server:", err)
 	}

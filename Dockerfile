@@ -5,6 +5,7 @@ COPY . .
 RUN go build -o gochat .
 
 FROM scratch
+ENV PORT=1337
 
 COPY --from=builder /app/gochat /gochat
 
