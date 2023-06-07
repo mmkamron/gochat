@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strings"
@@ -20,7 +21,7 @@ func main() {
 	}
 	defer listener.Close()
 
-	fmt.Println("Server is running. Waiting for connections...")
+	fmt.Println("Server is running. Accepting connections...")
 
 	go broadcastMessages()
 
@@ -54,8 +55,12 @@ func handleClient(conn net.Conn) {
 	for {
 		message, err := reader.ReadString('\n')
 		if err != nil {
-			log.Println("Failed to read message from client:", err)
-			break
+			if err == io.EOF {
+				continue
+			} else {
+				log.Println("Failed to read message from client:", err)
+				break
+			}
 		}
 
 		messageQueue <- fmt.Sprintf("%s: %s", username, strings.TrimSpace(message))
