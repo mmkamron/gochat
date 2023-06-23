@@ -40,7 +40,6 @@ func main() {
 func handleClient(conn net.Conn) {
 	reader := bufio.NewReader(conn)
 
-	// Read the username from the client
 	username, err := reader.ReadString('\n')
 	if err != nil {
 		log.Println("Failed to read username from client:", err)
@@ -48,7 +47,7 @@ func handleClient(conn net.Conn) {
 		return
 	}
 
-	username = username[:len(username)-1] // Remove the newline character
+	username = username[:len(username)-1]
 
 	clients[conn] = username
 	messageQueue <- fmt.Sprintf("User '%s' has joined the chat.", username)
@@ -57,7 +56,8 @@ func handleClient(conn net.Conn) {
 		message, err := reader.ReadString('\n')
 		if err != nil {
 			if err == io.EOF {
-				continue
+                log.Println(username + " has disconnected")
+				break
 			} else {
 				log.Println("Failed to read message from client:", err)
 				break

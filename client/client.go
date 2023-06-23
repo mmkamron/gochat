@@ -20,13 +20,11 @@ func main() {
 	}
 	defer conn.Close()
 
-	// Register a username
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter username: ")
 	username, _ := reader.ReadString('\n')
 	username = strings.TrimSpace(username)
 
-	// Send the username to the server
 	_, err = conn.Write([]byte(username + "\n"))
 	if err != nil {
 		log.Fatal("Failed to send username to server:", err)
