@@ -1,0 +1,11 @@
+<ul id="chat_room" hx-swap-oob="beforeend">
+    <li id="message" class="flex my-2">
+        <h1 class="text-base font-bold mr-2 text-red-500">{{ .ClientID }}: </h1>
+        <p class="text-base">{{ .Text }}</p>
+    </li>
+</ul>
+
+<form id="form" ws-send hx-swap="afterbegin" hx-on::after-request="this.reset()">
+    <input name="text" type="text" class="border-2 border-gray-300 p-2" placeholder="Type your message">
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2">Send</button>
+</form>
