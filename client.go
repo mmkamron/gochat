@@ -40,7 +40,7 @@ type Client struct {
 	send chan []byte
 }
 
-func (c *Client) readPump() {
+func (c *Client) read() {
 	defer func() {
 		c.hub.unregister <- c
 		c.conn.Close()
@@ -65,7 +65,7 @@ func (c *Client) readPump() {
 	}
 }
 
-func (c *Client) writePump() {
+func (c *Client) write() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -114,6 +114,6 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	client := &Client{id: id.String(), hub: hub, conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client
 
-	go client.writePump()
-	go client.readPump()
+	go client.write()
+	go client.read()
 }
